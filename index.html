@@ -1,1 +1,93 @@
-index.html
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OSRS Bingo</title>
+  <style>
+    body {
+      background: #2b2b2b;
+      color: #f5f5f5;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    h1 {
+      color: gold;
+      margin-top: 20px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      max-width: 600px;
+      margin: 30px auto;
+    }
+
+    .tile {
+      background: #444;
+      border: 2px solid #666;
+      padding: 20px;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.2s;
+    }
+
+    .tile:hover {
+      background: #555;
+    }
+
+    .tile.completed {
+      background: #2e7d32;
+      border-color: #4caf50;
+    }
+  </style>
+</head>
+<body>
+
+<h1>OSRS Bingo</h1>
+<p>Click a square to mark it complete</p>
+
+<div class="board">
+  <div class="tile">Kill Barrows</div>
+  <div class="tile">Obtain Fire Cape</div>
+  <div class="tile">Hard Clue Scroll</div>
+  <div class="tile">99 Skill</div>
+  <div class="tile">Pet Drop</div>
+
+  <div class="tile">Zulrah Kill</div>
+  <div class="tile">Vorkath Kill</div>
+  <div class="tile">Unique Drop</div>
+  <div class="tile">God Wars Boss</div>
+  <div class="tile">Quest Cape</div>
+
+  <div class="tile">Dragon Defender</div>
+  <div class="tile">Elite Clue</div>
+  <div class="tile">Skilling Pet</div>
+  <div class="tile">Raid Completion</div>
+  <div class="tile">Combat Achievement</div>
+
+  <div class="tile">Abyssal Whip</div>
+  <div class="tile">Barrows Set</div>
+  <div class="tile">Slayer Boss</div>
+  <div class="tile">Rare Drop Table</div>
+  <div class="tile">Diary Completion</div>
+
+  <div class="tile">Inferno Attempt</div>
+  <div class="tile">Boss Log Entry</div>
+  <div class="tile">Collection Log Slot</div>
+  <div class="tile">500 KC Boss</div>
+  <div class="tile">Achievement Diary</div>
+</div>
+
+<script>
+  document.querySelectorAll(".tile").forEach(tile => {
+    tile.addEventListener("click", () => {
+      tile.classList.toggle("completed");
+    });
+  });
+</script>
+
+</body>
+</html>

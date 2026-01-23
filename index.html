@@ -46,46 +46,83 @@
 <body>
 
 <h1>Peasantry Bingo #4!</h1>
+<p>Select your team:</p>
+
+<select id="teamSelect">
+  <option value="TeamApollo">Team Apollo</option>
+  <option value="TeamKobi">Team Kobi</option>
+</select>
+
 <p>Click a square to mark it complete</p>
 
 <div class="board">
-  <div class="tile">Kill Barrows</div>
-  <div class="tile">Obtain Fire Cape</div>
-  <div class="tile">Hard Clue Scroll</div>
-  <div class="tile">99 Skill</div>
-  <div class="tile">Pet Drop</div>
+  <div class="tile" data-id="0">Kill Barrows</div>
+  <div class="tile" data-id="1">Obtain Fire Cape</div>
+  <div class="tile" data-id="2">Hard Clue Scroll</div>
+  <div class="tile" data-id="3">99 Skill</div>
+  <div class="tile" data-id="4">Pet Drop</div>
 
-  <div class="tile">Zulrah Kill</div>
-  <div class="tile">Vorkath Kill</div>
-  <div class="tile">Unique Drop</div>
-  <div class="tile">God Wars Boss</div>
-  <div class="tile">Quest Cape</div>
+  <div class="tile" data-id="5">Zulrah Kill</div>
+  <div class="tile" data-id="6">Vorkath Kill</div>
+  <div class="tile" data-id="7">Unique Drop</div>
+  <div class="tile" data-id="8">God Wars Boss</div>
+  <div class="tile" data-id="9">Quest Cape</div>
 
-  <div class="tile">Dragon Defender</div>
-  <div class="tile">Elite Clue</div>
-  <div class="tile">Skilling Pet</div>
-  <div class="tile">Raid Completion</div>
-  <div class="tile">Combat Achievement</div>
+  <div class="tile" data-id="10">Dragon Defender</div>
+  <div class="tile" data-id="11">Elite Clue</div>
+  <div class="tile" data-id="12">Skilling Pet</div>
+  <div class="tile" data-id="13">Raid Completion</div>
+  <div class="tile" data-id="14">Combat Achievement</div>
 
-  <div class="tile">Abyssal Whip</div>
-  <div class="tile">Barrows Set</div>
-  <div class="tile">Slayer Boss</div>
-  <div class="tile">Rare Drop Table</div>
-  <div class="tile">Diary Completion</div>
+  <div class="tile" data-id="15">Abyssal Whip</div>
+  <div class="tile" data-id="16">Barrows Set</div>
+  <div class="tile" data-id="17">Slayer Boss</div>
+  <div class="tile" data-id="18">Rare Drop Table</div>
+  <div class="tile" data-id="19">Diary Completion</div>
 
-  <div class="tile">Inferno Attempt</div>
-  <div class="tile">Boss Log Entry</div>
-  <div class="tile">Collection Log Slot</div>
-  <div class="tile">500 KC Boss</div>
-  <div class="tile">Achievement Diary</div>
+  <div class="tile" data-id="20">Inferno Attempt</div>
+  <div class="tile" data-id="21">Boss Log Entry</div>
+  <div class="tile" data-id="22">Collection Log Slot</div>
+  <div class="tile" data-id="23">500 KC Boss</div>
+  <div class="tile" data-id="24">Achievement Diary</div>
 </div>
 
 <script>
-  document.querySelectorAll(".tile").forEach(tile => {
+  const tiles = document.querySelectorAll(".tile");
+  const teamSelect = document.getElementById("teamSelect");
+
+  function getStorageKey() {
+    return "osrs-bingo-" + teamSelect.value;
+  }
+
+  function loadBoard() {
+    const saved = JSON.parse(localStorage.getItem(getStorageKey())) || [];
+    tiles.forEach(tile => {
+      const id = tile.dataset.id;
+      tile.classList.toggle("completed", saved.includes(id));
+    });
+  }
+
+  function saveBoard() {
+    const completed = [];
+    tiles.forEach(tile => {
+      if (tile.classList.contains("completed")) {
+        completed.push(tile.dataset.id);
+      }
+    });
+    localStorage.setItem(getStorageKey(), JSON.stringify(completed));
+  }
+
+  tiles.forEach(tile => {
     tile.addEventListener("click", () => {
       tile.classList.toggle("completed");
+      saveBoard();
     });
   });
+
+  teamSelect.addEventListener("change", loadBoard);
+
+  loadBoard();
 </script>
 
 </body>

@@ -41,6 +41,28 @@
       background: #2e7d32;
       border-color: #4caf50;
     }
+    .tile {
+  position: relative;
+}
+
+.lock {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  font-size: 18px;
+  display: none;
+}
+
+.tile.locked .lock {
+  display: block;
+}
+
+.tile.locked {
+  cursor: not-allowed;
+  background: #1b5e20;
+  border-color: gold;
+}
+
   </style>
 </head>
 <body>
@@ -55,73 +77,180 @@
 
 <p>Click a square to mark it complete</p>
 
+<input type="file" id="proofInput" accept="image/*" style="display:none">  
 <div class="board">
-  <div class="tile" data-id="0">Kill Barrows</div>
-  <div class="tile" data-id="1">Obtain Fire Cape</div>
-  <div class="tile" data-id="2">Hard Clue Scroll</div>
-  <div class="tile" data-id="3">99 Skill</div>
-  <div class="tile" data-id="4">Pet Drop</div>
+  <div class="tile" data-id="0">
+    Kill Barrows
+  <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="1">
+    Obtain Fire Cape
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="2">
+    Hard Clue Scroll
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="3">
+    99 Skill
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="4">
+    Pet Drop
+    <div class="lock">🔒</div>
+</div>
 
-  <div class="tile" data-id="5">Zulrah Kill</div>
-  <div class="tile" data-id="6">Vorkath Kill</div>
-  <div class="tile" data-id="7">Unique Drop</div>
-  <div class="tile" data-id="8">God Wars Boss</div>
-  <div class="tile" data-id="9">Quest Cape</div>
+  <div class="tile" data-id="5">
+    Zulrah Kill
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="6">
+    Vorkath Kill
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="7">
+    Unique Drop
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="8">
+    God Wars Boss
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="9">
+    Quest Cape
+    <div class="lock">🔒</div>
+</div>
 
-  <div class="tile" data-id="10">Dragon Defender</div>
-  <div class="tile" data-id="11">Elite Clue</div>
-  <div class="tile" data-id="12">Skilling Pet</div>
-  <div class="tile" data-id="13">Raid Completion</div>
-  <div class="tile" data-id="14">Combat Achievement</div>
+  <div class="tile" data-id="10">
+    Dragon Defender
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="11">
+    Elite Clue
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="12">
+    Skilling Pet
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="13">
+    Raid Completion
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="14">
+    Combat Achievement
+    <div class="lock">🔒</div>
+</div>
 
-  <div class="tile" data-id="15">Abyssal Whip</div>
-  <div class="tile" data-id="16">Barrows Set</div>
-  <div class="tile" data-id="17">Slayer Boss</div>
-  <div class="tile" data-id="18">Rare Drop Table</div>
-  <div class="tile" data-id="19">Diary Completion</div>
+  <div class="tile" data-id="15">
+    Abyssal Whip
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="16">
+    Barrows Set
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="17">
+    Slayer Boss
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="18">
+    Rare Drop Table
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="19">
+    Diary Completion
+    <div class="lock">🔒</div>
+</div>
 
-  <div class="tile" data-id="20">Inferno Attempt</div>
-  <div class="tile" data-id="21">Boss Log Entry</div>
-  <div class="tile" data-id="22">Collection Log Slot</div>
-  <div class="tile" data-id="23">500 KC Boss</div>
-  <div class="tile" data-id="24">Achievement Diary</div>
+  <div class="tile" data-id="20">
+    Inferno Attempt
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="21">
+    Boss Log Entry
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="22">
+    Collection Log Slot
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="23">
+    500 KC Boss
+    <div class="lock">🔒</div>
+</div>
+  <div class="tile" data-id="24">
+    Achievement Diary
+    <div class="lock">🔒</div>
+</div>
 </div>
 
 <script>
   const tiles = document.querySelectorAll(".tile");
   const teamSelect = document.getElementById("teamSelect");
+  const proofInput = document.getElementById("proofInput");
 
-  function getStorageKey() {
-    return "osrs-bingo-" + teamSelect.value;
+  let activeTile = null;
+
+  function storageKey() {
+    return "osrs-bingo-data-" + teamSelect.value;
+  }
+
+  function loadData() {
+    return JSON.parse(localStorage.getItem(storageKey())) || {};
+  }
+
+  function saveData(data) {
+    localStorage.setItem(storageKey(), JSON.stringify(data));
   }
 
   function loadBoard() {
-    const saved = JSON.parse(localStorage.getItem(getStorageKey())) || [];
+    const data = loadData();
+
     tiles.forEach(tile => {
       const id = tile.dataset.id;
-      tile.classList.toggle("completed", saved.includes(id));
-    });
-  }
+      tile.classList.remove("completed", "locked");
 
-  function saveBoard() {
-    const completed = [];
-    tiles.forEach(tile => {
-      if (tile.classList.contains("completed")) {
-        completed.push(tile.dataset.id);
+      if (data[id]) {
+        tile.classList.add("completed", "locked");
       }
     });
-    localStorage.setItem(getStorageKey(), JSON.stringify(completed));
   }
 
   tiles.forEach(tile => {
     tile.addEventListener("click", () => {
-      tile.classList.toggle("completed");
-      saveBoard();
+      if (tile.classList.contains("locked")) {
+        const data = loadData();
+        const proof = data[tile.dataset.id];
+        if (proof) {
+          const img = new Image();
+          img.src = proof;
+          const w = window.open("");
+          w.document.write(img.outerHTML);
+        }
+        return;
+      }
+
+      activeTile = tile;
+      proofInput.click();
     });
   });
 
-  teamSelect.addEventListener("change", loadBoard);
+  proofInput.addEventListener("change", () => {
+    const file = proofInput.files[0];
+    if (!file || !activeTile) return;
 
+    const reader = new FileReader();
+    reader.onload = () => {
+      const data = loadData();
+      data[activeTile.dataset.id] = reader.result;
+      saveData(data);
+      loadBoard();
+    };
+    reader.readAsDataURL(file);
+  });
+
+  teamSelect.addEventListener("change", loadBoard);
   loadBoard();
 </script>
 

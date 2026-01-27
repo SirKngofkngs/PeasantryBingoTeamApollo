@@ -44,7 +44,20 @@
       background: #2e7d32;
       border-color: #4caf50;
     }
+.tile {
+  position: relative;
+}
 
+.lock {
+  position: absolute;
+  top: 5px;
+  right: 8px;
+  font-size: 18px;
+  display: none;
+}
+
+.tile.locked .lock {
+  display: block;
 
   </style>
 </head>
